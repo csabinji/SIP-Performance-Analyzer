@@ -146,8 +146,8 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label })
             displayValue = isCurrency
               ? currencyINR(pld.value)
               : Number.isFinite(pld.value)
-                ? pld.value.toFixed(2)
-                : '0.00';
+              ? pld.value.toFixed(2)
+              : '0.00';
           } else if (typeof pld.value === 'string') {
             displayValue = pld.value;
           } else {
@@ -183,8 +183,9 @@ const InfoTooltip: React.FC<{ text: string }> = ({ text }) => {
     >
       <HelpCircle className="w-4 h-4 text-gray-500 cursor-pointer" />
       <div
-        className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-800 text-white text-xs rounded-lg shadow-lg transition-opacity duration-300 z-10 ${show ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+        className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-800 text-white text-xs rounded-lg shadow-lg transition-opacity duration-300 z-10 ${
+          show ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
       >
         {text}
       </div>
@@ -832,69 +833,6 @@ const App: React.FC = () => {
                     </ResponsiveContainer>
                   </ChartContainer>
 
-                  <ChartContainer title="Average Unit Cost vs. NAV">
-                    <ResponsiveContainer width="100%" height={300}>
-                      <LineChart data={chartData.avgCostVsNav} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                        <XAxis dataKey="date" stroke="#9ca3af" fontSize={12} />
-                        <YAxis
-                          stroke="#9ca3af"
-                          fontSize={12}
-                          domain={[
-                            (dataMin: number) => dataMin - 1,
-                            (dataMax: number) => dataMax + 1,
-                          ]}
-                          tickFormatter={(value: number) => `₹${value.toFixed(1)}`}
-                        />
-                        <Tooltip content={<CustomTooltip />} />
-                        <Legend iconSize={10} />
-                        <Line type="monotone" dataKey="Average Cost" stroke="#f59e0b" strokeWidth={2} dot={false} />
-                        <Line type="monotone" dataKey="NAV" stroke="#22c55e" strokeWidth={2} dot={false} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-                </div>
-
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                  <ChartContainer title="Yearly Investment">
-                    <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={chartData.yearlyInvestment} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                        <XAxis dataKey="year" stroke="#9ca3af" fontSize={12} />
-                        <YAxis
-                          stroke="#9ca3af"
-                          fontSize={12}
-                          tickFormatter={(value: number) => `₹${value / 1000}k`}
-                        />
-                        <Tooltip content={<CustomTooltip />} />
-                        <Legend iconSize={10} />
-                        <Bar dataKey="Investment Amount" fill="#8b5cf6" />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-                  <ChartContainer title="Portfolio Composition">
-                    <ResponsiveContainer width="100%" height={300}>
-                      <PieChart>
-                        <Tooltip content={<CustomTooltip />} />
-                        <Pie
-                          data={chartData.portfolioComposition}
-                          dataKey="value"
-                          nameKey="name"
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={100}
-                          paddingAngle={5}
-                        >
-                          {chartData.portfolioComposition.map((_, index) => (
-                            <Cell key={`pc-${index}`} fill={COMPOSITION_COLORS[index % COMPOSITION_COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <Legend iconSize={10} verticalAlign="bottom" />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-
                   <ChartContainer title="Return Composition" className="xl:col-span-2">
                     <ResponsiveContainer width="100%" height={300}>
                       <PieChart>
@@ -923,6 +861,31 @@ const App: React.FC = () => {
                       </PieChart>
                     </ResponsiveContainer>
                   </ChartContainer>
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                  <ChartContainer title="Portfolio Composition">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <PieChart>
+                        <Tooltip content={<CustomTooltip />} />
+                        <Pie
+                          data={chartData.portfolioComposition}
+                          dataKey="value"
+                          nameKey="name"
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          paddingAngle={5}
+                        >
+                          {chartData.portfolioComposition.map((_, index) => (
+                            <Cell key={`pc-${index}`} fill={COMPOSITION_COLORS[index % COMPOSITION_COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Legend iconSize={10} verticalAlign="bottom" />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
 
                   <ChartContainer
                     title={`Monthly Investment Trend (${chartData.monthlyInvestment.length > 0 ? new Date(chartData.growth[chartData.growth.length - 1]?.date ?? Date.now()).getFullYear() : ''})`}
@@ -938,6 +901,45 @@ const App: React.FC = () => {
                         />
                         <Tooltip content={<CustomTooltip />} />
                         <Bar dataKey="Investment Amount" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
+
+                  <ChartContainer title="Average Unit Cost vs. NAV">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart data={chartData.avgCostVsNav} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                        <XAxis dataKey="date" stroke="#9ca3af" fontSize={12} />
+                        <YAxis
+                          stroke="#9ca3af"
+                          fontSize={12}
+                          domain={[
+                            (dataMin: number) => dataMin - 1,
+                            (dataMax: number) => dataMax + 1,
+                          ]}
+                          tickFormatter={(value: number) => `₹${value.toFixed(1)}`}
+                        />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Legend iconSize={10} />
+                        <Line type="monotone" dataKey="Average Cost" stroke="#f59e0b" strokeWidth={2} dot={false} />
+                        <Line type="monotone" dataKey="NAV" stroke="#22c55e" strokeWidth={2} dot={false} />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </ChartContainer>
+
+                  <ChartContainer title="Yearly Investment">
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={chartData.yearlyInvestment} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                        <XAxis dataKey="year" stroke="#9ca3af" fontSize={12} />
+                        <YAxis
+                          stroke="#9ca3af"
+                          fontSize={12}
+                          tickFormatter={(value: number) => `₹${value / 1000}k`}
+                        />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Legend iconSize={10} />
+                        <Bar dataKey="Investment Amount" fill="#8b5cf6" />
                       </BarChart>
                     </ResponsiveContainer>
                   </ChartContainer>
